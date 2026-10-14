@@ -1,7 +1,7 @@
 {
   "listen": [
     { "name": "YouTube", "url": "https://www.youtube.com/@fullhouselabelrj" },
-    { "name": "Spotify", "url": "https://soundcloud.com/solar-rod" },
+    { "name": "Spotify", "url": "" },
     { "name": "SoundCloud", "url": "https://soundcloud.com/solar-rod" },
     { "name": "Apple Music", "url": "" }
   ],
@@ -9,10 +9,10 @@
     { "name": "@fullhouselabel", "url": "https://www.instagram.com/fullhouselabel/" }
   ],
   "crew": [
-    "@rodysurfclick",
+    "@rodybrother",
     "@armata.rj",
     "@rodrsolar",
     "@n7upstar"
   ],
-  "email": "fullhouselabel@gmail.com"
+  "email": "fullhouselabelrj@gmail.com"
 }
