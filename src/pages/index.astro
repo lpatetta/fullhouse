@@ -213,7 +213,12 @@ const videos = videoLinks.map((v) => ({ id: youtubeId(v.url), title: v.title }))
       renderThumbs(i);
     }
 
-    if (videos.length) show(Math.floor(Math.random() * videos.length));
+    // Shuffle once per page load (Fisher–Yates): the first video is featured, the rest follow in this random order.
+    for (let i = videos.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [videos[i], videos[j]] = [videos[j], videos[i]];
+    }
+    if (videos.length) show(0);
   </script>
 
   <style is:global>
@@ -312,6 +317,8 @@ const videos = videoLinks.map((v) => ({ id: youtubeId(v.url), title: v.title }))
       .events { padding-bottom: 64px; }
       .events h2 { margin-bottom: 24px; }
       .events li { padding: 20px 0; }
+      /* Mobile shows 3 videos in total: the featured one plus the first 2 (randomly ordered) thumbnails. */
+      .thumb:nth-child(n + 3) { display: none; }
       .foot { padding-top: 24px; padding-bottom: 24px; }
       .events li { grid-template-columns: 1fr; gap: 6px; }
       .events li .btn { justify-self: start; margin-top: 8px; }
