@@ -1,0 +1,16 @@
+# Dependencies (Cloudflare installs them from package-lock.json)
+node_modules/
+
+# Astro cache
+.astro/
+
+# macOS
+.DS_Store
+
+# Local tooling output
+.playwright-mcp/
+
+# Secrets
+.env*
+*.pem
+*.key
