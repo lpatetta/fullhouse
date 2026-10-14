@@ -6,7 +6,39 @@
     "venue": "Recreio Carioca Bar e Lounge",
     "address": "Av. Lúcio Costa, 17970 — Recreio dos Bandeirantes, Rio de Janeiro",
     "image": "/images/halloween-2026.webp",
-    "tickets": "https://www.instagram.com/fullhouselabel/",
+    "tickets": "https://shotgun.live/pt-br/events/helloween-full-house-ft-drop-night",
     "featured": true
+  },
+  {
+    "date": "2026-09-12",
+    "time": "22h",
+    "name": "PULZ",
+    "venue": "Bernards Rio",
+    "address": "Rua Químico Roberto Pinho 80 — Recreio dos Bandeirantes, Rio de Janeiro",
+    "featured": false
+  },
+  {
+    "date": "2026-08-29",
+    "time": "22h",
+    "name": "Full House Sessions",
+    "venue": "Bernards Rio",
+    "address": "Rua Químico Roberto Pinho 80 — Recreio dos Bandeirantes, Rio de Janeiro",
+    "featured": false
+  },
+  {
+    "date": "2026-08-15",
+    "time": "22h",
+    "name": "Full House Sessions",
+    "venue": "Bernards Rio",
+    "address": "Rua Químico Roberto Pinho 80 — Recreio dos Bandeirantes, Rio de Janeiro",
+    "featured": false
+  },
+  {
+    "date": "2026-08-08",
+    "time": "22h",
+    "name": "Full House Mirante",
+    "venue": "Mirante da Rosinha",
+    "address": "Mirante da Rosinha — Rio de Janeiro",
+    "featured": false
   }
 ]

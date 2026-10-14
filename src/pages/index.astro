@@ -4,16 +4,29 @@ import events from '../data/events.json';
 import links from '../data/links.json';
 
 const MONTHS = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+const MONTHS_LONG = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
+const WEEKDAYS = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
+// e.g. "2026-10-31" → "SÁBADO 31 DE OUTUBRO"
+const longDate = (iso: string) => {
+  const [y, m, d] = iso.split('-').map(Number);
+  const weekday = WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()];
+  return `${weekday} ${d} DE ${MONTHS_LONG[m - 1]}`;
+};
 const fmt = (iso: string) => {
   const [y, m, d] = iso.split('-');
   return { day: d, month: MONTHS[Number(m) - 1], year: y };
 };
 
-// Upcoming events only (evaluated at build time), soonest first.
+// Evaluated at build time. Upcoming soonest first; past most recent first.
+// `image` and `tickets` are optional (past events often have neither).
+type Event = { date: string; time: string; name: string; venue: string; address: string; image?: string; tickets?: string; featured?: boolean };
 const today = new Date().toISOString().slice(0, 10);
-const upcoming = events
+const upcoming = (events as Event[])
   .filter((e) => e.date >= today)
   .sort((a, b) => a.date.localeCompare(b.date));
+const past = (events as Event[])
+  .filter((e) => e.date < today)
+  .sort((a, b) => b.date.localeCompare(a.date));
 const featured = upcoming.find((e) => e.featured) ?? upcoming[0];
 
 const listen = links.listen.filter((l) => l.url);
@@ -58,15 +71,15 @@ const videos = videoLinks.map((v) => ({ id: youtubeId(v.url), title: v.title }))
     {featured && (
       <section class="hero wrap">
         <div class="hero-text">
-          <p class="kicker">{fmt(featured.date).day} {fmt(featured.date).month} {fmt(featured.date).year} · {featured.time}</p>
+          <p class="kicker">{longDate(featured.date)}</p>
           <h1>{featured.name}</h1>
           <p class="hero-sub">{featured.venue}<br />{featured.address}</p>
           <div class="btns">
-            <a class="btn btn-solid" href={featured.tickets} target="_blank" rel="noopener">INGRESSOS</a>
+            {featured.tickets && <a class="btn btn-solid" href={featured.tickets} target="_blank" rel="noopener">INGRESSOS</a>}
             <a class="btn btn-line" href="#eventos">TODAS AS DATAS</a>
           </div>
         </div>
-        <img class="hero-img" src={featured.image} alt={`Flyer: ${featured.name}, ${featured.venue}`} width="1440" height="1800" />
+        {featured.image && <img class="hero-img" src={featured.image} alt={`Flyer: ${featured.name}, ${featured.venue}`} width="1440" height="1800" />}
       </section>
     )}
 
@@ -104,16 +117,25 @@ const videos = videoLinks.map((v) => ({ id: youtubeId(v.url), title: v.title }))
 
     <section id="eventos" class="events wrap">
       <h2>EVENTOS</h2>
-      {upcoming.length === 0 ? (
+      {upcoming.length === 0 && (
         <p class="muted center">Novas datas em breve. Siga <a href="https://www.instagram.com/fullhouselabel/">@fullhouselabel</a>.</p>
-      ) : (
+      )}
+      {upcoming.length + past.length > 0 && (
         <ul>
           {upcoming.map((e) => (
             <li>
               <span class="ev-date">{fmt(e.date).day} {fmt(e.date).month}</span>
               <span class="ev-name">{e.name}</span>
               <span class="ev-place">{e.venue} · {e.time}</span>
-              <a class="btn btn-line-accent" href={e.tickets} target="_blank" rel="noopener">INGRESSOS</a>
+              {e.tickets ? <a class="btn btn-line-accent" href={e.tickets} target="_blank" rel="noopener">INGRESSOS</a> : <span />}
+            </li>
+          ))}
+          {past.map((e) => (
+            <li class="ev-past">
+              <span class="ev-date">{fmt(e.date).day} {fmt(e.date).month}</span>
+              <span class="ev-name">{e.name}</span>
+              <span class="ev-place">{e.venue} · {e.time}</span>
+              <span class="ev-status">JÁ ROLOU</span>
             </li>
           ))}
         </ul>
@@ -272,14 +294,25 @@ const videos = videoLinks.map((v) => ({ id: youtubeId(v.url), title: v.title }))
     .ev-date { font-family: 'Anton', Impact, sans-serif; font-size: 28px; }
     .ev-name { font-size: 18px; font-weight: 700; }
     .ev-place { color: var(--muted); }
+    .ev-past { opacity: 0.55; }
+    .ev-status { font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: var(--muted); }
 
     footer { border-top: 1px solid #222225; }
     .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; padding-top: 32px; padding-bottom: 32px; font-size: 13px; letter-spacing: 0.14em; color: var(--muted); }
     .foot a { color: var(--muted); }
 
     @media (max-width: 720px) {
-      .wrap { padding: 0 16px; }
-      .hero { gap: 32px; padding-bottom: 64px; }
+      /* Side gutters only: a `padding` shorthand here would wipe the vertical padding of every .wrap section. */
+      .wrap { padding-left: 16px; padding-right: 16px; }
+      .nav { padding-top: 20px; padding-bottom: 20px; }
+      .hero { gap: 32px; padding-top: 8px; padding-bottom: 64px; }
+      .videos { padding-bottom: 72px; }
+      .links { gap: 24px; padding-bottom: 64px; }
+      .links h2, .events h2 { font-size: 48px; }
+      .events { padding-bottom: 64px; }
+      .events h2 { margin-bottom: 24px; }
+      .events li { padding: 20px 0; }
+      .foot { padding-top: 24px; padding-bottom: 24px; }
       .events li { grid-template-columns: 1fr; gap: 6px; }
       .events li .btn { justify-self: start; margin-top: 8px; }
     }
