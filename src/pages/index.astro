@@ -2,6 +2,7 @@
 import videoLinks from '../data/videos.json';
 import events from '../data/events.json';
 import links from '../data/links.json';
+import about from '../data/about.json';
 
 const MONTHS = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
 const MONTHS_LONG = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
@@ -49,7 +50,7 @@ const videos = videoLinks.map((v) => ({ id: youtubeId(v.url), title: v.title }))
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Full House Label — Rio de Janeiro</title>
-  <meta name="description" content="Full House Label: gravadora e plataforma de música eletrônica do Rio de Janeiro. Lançamentos, sets, podcasts e eventos." />
+  <meta name="description" content="Full House Label: Uma casa onde a cena eletrônica cresce junto." />
   <meta property="og:title" content="Full House Label" />
   <meta property="og:image" content={featured?.image ?? '/images/halloween-2026.webp'} />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -80,6 +81,15 @@ const videos = videoLinks.map((v) => ({ id: youtubeId(v.url), title: v.title }))
           </div>
         </div>
         {featured.image && <img class="hero-img" src={featured.image} alt={`Flyer: ${featured.name}, ${featured.venue}`} width="1440" height="1800" />}
+      </section>
+    )}
+
+    {about.text && (
+      <section id="sobre" class="wrap">
+        <div class="about">
+          <p class="kicker">{about.title}</p>
+          <p class="about-text">{about.text}</p>
+        </div>
       </section>
     )}
 
@@ -246,7 +256,7 @@ const videos = videoLinks.map((v) => ({ id: youtubeId(v.url), title: v.title }))
     .wrap { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
     .muted { color: var(--muted); }
     .center { text-align: center; }
-    .kicker { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.3em; color: var(--accent); }
+    .kicker { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0.24em; color: var(--accent); }
     .kicker.muted { color: var(--muted); margin-top: 16px; }
 
     .nav { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding-top: 28px; padding-bottom: 28px; }
@@ -267,6 +277,9 @@ const videos = videoLinks.map((v) => ({ id: youtubeId(v.url), title: v.title }))
     .btn-line-accent { border: 1px solid var(--accent); color: var(--accent); }
     .btn-line-accent:hover { background: var(--accent); color: var(--bg); }
 
+    /* Label and text as one centered group: vertically centered against each other, empty space split left/right. */
+    .about { display: grid; grid-template-columns: auto minmax(0, 56ch); justify-content: center; align-items: center; gap: 64px; border-top: 1px solid var(--line); padding-top: 48px; padding-bottom: 112px; }
+    .about-text { margin: 0; font-size: clamp(17px, 1.4vw, 19px); line-height: 1.6; text-wrap: pretty; }
     .videos { padding-bottom: 112px; }
     .featured-video { width: 100%; aspect-ratio: 16 / 9; max-height: 90vh; background: #000; }
     .featured-video iframe { width: 100%; height: 100%; border: 0; display: block; }
@@ -311,6 +324,7 @@ const videos = videoLinks.map((v) => ({ id: youtubeId(v.url), title: v.title }))
       .wrap { padding-left: 16px; padding-right: 16px; }
       .nav { padding-top: 20px; padding-bottom: 20px; }
       .hero { gap: 32px; padding-top: 8px; padding-bottom: 64px; }
+      .about { grid-template-columns: 1fr; justify-content: stretch; gap: 16px; padding-top: 32px; padding-bottom: 72px; }
       .videos { padding-bottom: 72px; }
       .links { gap: 24px; padding-bottom: 64px; }
       .links h2, .events h2 { font-size: 48px; }
